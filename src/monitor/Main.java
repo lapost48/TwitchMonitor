@@ -1,14 +1,13 @@
+package monitor;
+
 import gui.MonitorWindow;
 import gui.ViewerMonitor;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class Main
 {
-    public static HashMap<String, LocalDateTime> currentViewers = new HashMap<String, LocalDateTime>();
-    public static ViewerMonitor observer = new ViewerMonitor("jdbc:sqlite:SQLite/ViewerInfo.db");
+    public static ViewerMonitor observer = new ViewerMonitor("jdbc:sqlite:H:/StreamData/Testing/ViewerInfo.db");
 
     public static void main(String[] args)
     {

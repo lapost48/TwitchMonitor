@@ -99,6 +99,14 @@ public class ViewerMonitor
         }
     }
 
+    public void newDbLocation(String dbName)
+    {
+        this.dbName = dbName;
+        conn = null;
+
+        initDB();
+    }
+
     public void viewerUpdate()
     {
         int chatterCount = 0;
@@ -121,7 +129,7 @@ public class ViewerMonitor
                 if(viewerFlag && line.contains("]"))
                     viewerFlag = false;
                 if(viewerFlag)
-                    viewers.add(line.substring(7, line.length() - 1));
+                    viewers.add(line.substring(7, line.indexOf('"', 7)));
                 if(line.contains("viewers"))
                     viewerFlag = true;
             }
@@ -156,12 +164,19 @@ public class ViewerMonitor
     {
         if(viewers == null)
             viewers = new LinkedList<String>();
+
         LinkedList<Span> newSpans = new LinkedList<Span>();
+        LinkedList<String> removeKeys = new LinkedList<String>();
         for(Map.Entry<String, LocalDateTime> entry : currentViewers.entrySet())
         {
             if(!viewers.contains(entry.getKey()))
+            {
                 newSpans.add(new Span(entry.getKey(), entry.getValue(), LocalDateTime.now()));
+                removeKeys.add(entry.getKey());
+            }
         }
+        for(String user : removeKeys)
+            currentViewers.remove(user);
 
         if(!newSpans.isEmpty()) {
             // Create a connection to the database

@@ -22,7 +22,10 @@ public class MonitorWindow extends JFrame
 
         createStreamButton();
 
-        this.pack();
+        setIconImage();
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(400, 200);
         this.setVisible(true);
     }
 
@@ -60,6 +63,12 @@ public class MonitorWindow extends JFrame
     {
         JButton streamButton = new StreamButton("Start Stream", this);
         this.getContentPane().add(streamButton);
+    }
+
+    private void setIconImage()
+    {
+//        ImageIcon img = new ImageIcon(getClass().getResource("C:\\Users\\Nick LaPosta\\IdeaProjects\\TwitchMonitor\\Images\\MoonIcon.png"));
+//        this.setIconImage(img.getImage());
     }
 
     public void notifyStreamState(boolean isStreaming) {
