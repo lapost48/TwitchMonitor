@@ -1,5 +1,9 @@
 package gui;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import javax.swing.text.View;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -27,6 +32,22 @@ public class ViewerMonitor
         public String getUsername(){return username;}
         public LocalDateTime getStartTime(){return watchTimes[0];}
         public LocalDateTime getEndTime(){return watchTimes[1];}
+    }
+
+    public static class TwitchInfo
+    {
+        public int chatter_count;
+        public Chatters chatters;
+    }
+
+    public static class Chatters
+    {
+        public String[] broadcaster;
+        public String[] vips;
+        public String[] moderators;
+        public String[] staff;
+        public String[] admins;
+        public String[] viewers;
     }
 
     private String dbName;
@@ -119,20 +140,18 @@ public class ViewerMonitor
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(url.openStream()));
 
-            boolean viewerFlag = false;
-            String line;
-            while ((line = reader.readLine()) != null) {
+            GsonBuilder builder = new GsonBuilder();
 
-                if(line.contains("chatter_count"))
-                    chatterCount = Integer.valueOf(line.substring(19, line.length() - 1));
+            Gson gson = builder.create();
+            TwitchInfo twitchInfo = gson.fromJson(reader, TwitchInfo.class);
 
-                if(viewerFlag && line.contains("]"))
-                    viewerFlag = false;
-                if(viewerFlag)
-                    viewers.add(line.substring(7, line.indexOf('"', 7)));
-                if(line.contains("viewers"))
-                    viewerFlag = true;
-            }
+            chatterCount = twitchInfo.chatter_count;
+            viewers.addAll(Arrays.asList(twitchInfo.chatters.broadcaster));
+            viewers.addAll(Arrays.asList(twitchInfo.chatters.vips));
+            viewers.addAll(Arrays.asList(twitchInfo.chatters.moderators));
+            viewers.addAll(Arrays.asList(twitchInfo.chatters.staff));
+            viewers.addAll(Arrays.asList(twitchInfo.chatters.admins));
+            viewers.addAll(Arrays.asList(twitchInfo.chatters.viewers));
 
 //            System.out.println("Chatter Count: " + chatterCount);
 //            System.out.println("Chatters: ");
