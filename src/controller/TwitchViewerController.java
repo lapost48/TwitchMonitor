@@ -26,13 +26,19 @@ public class TwitchViewerController
     {
         while(true) {
             try {
-                TimeUnit.MINUTES.sleep(1);
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             if (model.isStreaming())
                 viewerUpdate();
         }
+    }
+
+    public void exit()
+    {
+        if(model.isStreaming())
+            streamButtonPress();
     }
 
     private void streamButtonPress()

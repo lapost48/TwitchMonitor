@@ -12,9 +12,9 @@ public class App
     public static void main(String[] args)
     {
         TwitchViewerGUI view = new TwitchViewerGUI("Viewer Monitor");
-//        Runtime.getRuntime().addShutdownHook(new Thread(() -> App.observer.notifyStreamState(false)));
         TwitchViewerModel model = new TwitchViewerModel();
         TwitchViewerController controller = new TwitchViewerController(model, view);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> controller.exit()));
 
         controller.init();
         controller.run();
