@@ -37,6 +37,7 @@ public class TwitchViewerGUI extends JFrame
 //        this.setIconImage(img.getImage());
     }
 
+    // TODO: Make this function look cleaner. Priority: LOW
     private JPanel createGameInfoPanel()
     {
         gameFields = new JTextField[2];
@@ -75,6 +76,11 @@ public class TwitchViewerGUI extends JFrame
         return  streamButton;
     }
 
+    public JButton getStreamButton()
+    {
+        return streamButton;
+    }
+
     private void createCenterPanel(JPanel gameInfoPanel, JButton streamButton)
     {
         JPanel centerPanel = new JPanel();
@@ -83,10 +89,5 @@ public class TwitchViewerGUI extends JFrame
         centerPanel.add(streamButton);
 
         this.getContentPane().add(centerPanel, BorderLayout.CENTER);
-    }
-
-    public JButton getStreamButton()
-    {
-        return streamButton;
     }
 }
