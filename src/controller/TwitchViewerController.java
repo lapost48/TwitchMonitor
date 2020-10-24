@@ -75,5 +75,6 @@ public class TwitchViewerController
 
         String[] newViewers = model.getNewViewers();
         String[] currentViewers = model.getCurrentViewers();
+
     }
 }

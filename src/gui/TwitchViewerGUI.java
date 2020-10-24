@@ -1,12 +1,14 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class TwitchViewerGUI extends JFrame
 {
     private JTextField[] gameFields;
     private JButton streamButton;
+    private JTextArea viewerList;
 
     public TwitchViewerGUI(String title)
     {
@@ -17,8 +19,9 @@ public class TwitchViewerGUI extends JFrame
 
         JPanel gameInfoPanel = createGameInfoPanel();
         streamButton = createStreamButton();
-
         createCenterPanel(gameInfoPanel, streamButton);
+
+        createViewerList();
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(400, 200);
@@ -72,8 +75,7 @@ public class TwitchViewerGUI extends JFrame
 
     private JButton createStreamButton()
     {
-        JButton streamButton = new JButton("Start Stream");
-        return  streamButton;
+        return  new JButton("Start Stream");
     }
 
     public JButton getStreamButton()
@@ -89,5 +91,33 @@ public class TwitchViewerGUI extends JFrame
         centerPanel.add(streamButton);
 
         this.getContentPane().add(centerPanel, BorderLayout.CENTER);
+    }
+
+    private void createViewerList()
+    {
+        JPanel viewerListPanel = new JPanel();
+        viewerListPanel.setLayout(new BoxLayout(viewerListPanel, BoxLayout.Y_AXIS));
+        viewerListPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
+        JLabel viewerListLabel = new JLabel("Viewer List");
+        viewerListPanel.add(viewerListLabel);
+
+        viewerList = new JTextArea();
+        viewerList.setBorder(BorderFactory.createBevelBorder(1));
+        viewerList.setDisabledTextColor(Color.BLACK);
+        viewerList.setEnabled(false);
+
+        JScrollPane viewerListScrollPane = new JScrollPane(viewerList);
+        viewerListScrollPane.setPreferredSize(new Dimension(150, 200));
+        viewerListScrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        viewerListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        viewerListPanel.add(viewerListScrollPane);
+
+        this.getContentPane().add(viewerListPanel, BorderLayout.WEST);
+    }
+
+    public JTextArea getViewerList()
+    {
+        return viewerList;
     }
 }
