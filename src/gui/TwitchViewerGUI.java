@@ -9,6 +9,7 @@ public class TwitchViewerGUI extends JFrame
     private JTextField[] gameFields;
     private JButton streamButton;
     private JTextArea viewerList;
+    private JTextArea gameList;
 
     public TwitchViewerGUI(String title)
     {
@@ -17,16 +18,16 @@ public class TwitchViewerGUI extends JFrame
         setupContentPane();
 //        setIconImage();
 
-        JPanel gameInfoPanel = createGameInfoPanel();
         streamButton = createStreamButton();
-        createCenterPanel(gameInfoPanel, streamButton);
+        createCenterPanel(streamButton);
 
         createViewerList();
 
+        createGameList();
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(400, 200);
-        this.setVisible(true);
         this.pack();
+        this.setVisible(true);
     }
 
     private void setupContentPane()
@@ -41,31 +42,49 @@ public class TwitchViewerGUI extends JFrame
     }
 
     // TODO: Make this function look cleaner. Priority: LOW
-    private JPanel createGameInfoPanel()
+    private void createGameInfo(JPanel parent)
     {
         gameFields = new JTextField[2];
+        GridBagConstraints constraints = new GridBagConstraints();
 
-        JPanel gameInfoPanel = new JPanel();
-        gameInfoPanel.setLayout(new BoxLayout(gameInfoPanel, BoxLayout.Y_AXIS));
+        JLabel nameLabel = new JLabel("Game Name");
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        constraints.gridheight = 1;
+        constraints.gridwidth = 1;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 0;
+        constraints.insets = new Insets(0, 0, 5, 0);
+        parent.add(nameLabel, constraints);
 
-        JPanel gameNamePanel = new JPanel();
-        gameNamePanel.add(new JLabel("Game Name"));
         JTextField gameNameTextField = new JTextField();
-        gameNameTextField.setPreferredSize(new Dimension(100, 20));
-        gameNamePanel.add(gameNameTextField);
         gameFields[0] = gameNameTextField;
+        constraints.gridheight = 1;
+        constraints.gridwidth = 2;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.5;
+        parent.add(gameNameTextField, constraints);
 
-        JPanel gameGenrePanel = new JPanel();
-        gameGenrePanel.add(new JLabel("Game Genre"));
+        JLabel genreLabel = new JLabel("Game Genre");
+        genreLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        constraints.gridheight = 1;
+        constraints.gridwidth = 1;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.weightx = 0;
+        parent.add(genreLabel, constraints);
+
         JTextField gameGenreTextField = new JTextField();
-        gameGenreTextField.setPreferredSize(new Dimension(100, 20));
-        gameGenrePanel.add(gameGenreTextField);
         gameFields[1] = gameGenreTextField;
-
-        gameInfoPanel.add(gameNamePanel);
-        gameInfoPanel.add(gameGenrePanel);
-
-        return gameInfoPanel;
+        constraints.gridheight = 1;
+        constraints.gridwidth = 2;
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.5;
+        parent.add(gameGenreTextField, constraints);
     }
 
     public JTextField[] getGameFields()
@@ -83,12 +102,21 @@ public class TwitchViewerGUI extends JFrame
         return streamButton;
     }
 
-    private void createCenterPanel(JPanel gameInfoPanel, JButton streamButton)
+    private void createCenterPanel(JButton streamButton)
     {
         JPanel centerPanel = new JPanel();
-        centerPanel.setPreferredSize(new Dimension(200, 100));
-        centerPanel.add(gameInfoPanel);
-        centerPanel.add(streamButton);
+        centerPanel.setLayout(new GridBagLayout());
+        centerPanel.setPreferredSize(new Dimension(200, centerPanel.getPreferredSize().height));
+
+        createGameInfo(centerPanel);
+
+        GridBagConstraints buttonCon = new GridBagConstraints();
+        buttonCon.gridwidth = 3;
+        buttonCon.gridheight = 1;
+        buttonCon.gridx = 0;
+        buttonCon.gridy = 2;
+
+        centerPanel.add(streamButton, buttonCon);
 
         this.getContentPane().add(centerPanel, BorderLayout.CENTER);
     }
@@ -119,5 +147,33 @@ public class TwitchViewerGUI extends JFrame
     public JTextArea getViewerList()
     {
         return viewerList;
+    }
+
+    public void createGameList()
+    {
+        JPanel gameListPanel = new JPanel();
+        gameListPanel.setLayout(new BoxLayout(gameListPanel, BoxLayout.Y_AXIS));
+        gameListPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
+        JLabel gameListLabel = new JLabel("Game List");
+        gameListPanel.add(gameListLabel);
+
+        gameList = new JTextArea();
+        gameList.setBorder(BorderFactory.createBevelBorder(1));
+        gameList.setDisabledTextColor(Color.BLACK);
+        gameList.setEnabled(false);
+
+        JScrollPane gameListScrollPane = new JScrollPane(gameList);
+        gameListScrollPane.setPreferredSize(new Dimension(150, 200));
+        gameListScrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        gameListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        gameListPanel.add(gameListScrollPane);
+
+        this.getContentPane().add(gameListPanel, BorderLayout.EAST);
+    }
+
+    public JTextArea getGameList()
+    {
+        return gameList;
     }
 }
