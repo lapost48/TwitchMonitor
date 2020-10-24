@@ -26,7 +26,7 @@ public class TwitchViewerController
     {
         while(true) {
             try {
-                TimeUnit.MINUTES.sleep(1);
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -70,11 +70,16 @@ public class TwitchViewerController
     private void viewerUpdate()
     {
         LinkedList<String> viewerInfo = model.requestViewerInfo();
+
         model.updateNewViewers(viewerInfo);
         model.updateMissingViewers(viewerInfo);
 
         String[] newViewers = model.getNewViewers();
         String[] currentViewers = model.getCurrentViewers();
 
+        StringBuilder users = new StringBuilder();
+        for(String user : currentViewers)
+            users.append(user).append("\n");
+        view.getViewerList().setText(users.toString().trim());
     }
 }

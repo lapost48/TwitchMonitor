@@ -128,6 +128,6 @@ public class TwitchViewerModel
 
     public String[] getCurrentViewers()
     {
-        return newViewers.toArray(new String[0]);
+        return currentViewers.keySet().toArray(new String[0]);
     }
 }
