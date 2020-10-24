@@ -5,6 +5,7 @@ import gui.TwitchViewerGUI;
 import model.TwitchViewerModel;
 
 import javax.swing.*;
+import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 public class TwitchViewerController
@@ -65,6 +66,11 @@ public class TwitchViewerController
     // TODO: Implement viewer update function
     private void viewerUpdate()
     {
+        LinkedList<String> viewerInfo = model.requestViewerInfo();
+        model.updateNewViewers(viewerInfo);
+        model.updateMissingViewers(viewerInfo);
 
+        String[] newViewers = model.getNewViewers();
+        String[] currentViewers = model.getCurrentViewers();
     }
 }
