@@ -3,8 +3,11 @@ package controller;
 import gui.TwitchViewerGUI;
 import model.TwitchViewerModel;
 
-import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class TwitchViewerController
@@ -20,10 +23,12 @@ public class TwitchViewerController
     public void init()
     {
         this.view.getStreamButton().addActionListener(e -> streamButtonPress());
+        setGameText(model.getAllGameInfo());
     }
 
     public void run()
     {
+        //noinspection InfiniteLoopStatement
         while(true) {
             try {
                 TimeUnit.SECONDS.sleep(1);
@@ -32,38 +37,6 @@ public class TwitchViewerController
             }
             if (model.isStreaming())
                 viewerUpdate();
-        }
-    }
-
-    public void exit()
-    {
-        if(model.isStreaming())
-            model.endStream();
-    }
-
-    private void streamButtonPress()
-    {
-        boolean isStreaming = model.isStreaming();
-        JButton button = view.getStreamButton();
-        JTextField[] gameFields = view.getGameFields();
-        String[] gameInfo = new String[2];
-
-        for(int i = 0; i < gameFields.length; i++)
-        {
-            gameFields[i].setEnabled(isStreaming);
-            gameInfo[i] = gameFields[i].getText();
-        }
-
-
-        if(isStreaming)
-        {
-            button.setText("Start Stream");
-            model.endStream();
-        }
-        else
-        {
-            button.setText("End Stream");
-            model.startStream(gameInfo);
         }
     }
 
@@ -81,5 +54,48 @@ public class TwitchViewerController
         for(String user : currentViewers)
             users.append(user).append("\n");
         view.getViewerList().setText(users.toString().trim());
+    }
+
+    public void exit()
+    {
+        if(model.isStreaming())
+            model.endStream();
+    }
+
+    private void streamButtonPress()
+    {
+        boolean isStreaming = model.isStreaming();
+        String[] gameInfo = new String[2];
+
+        for(int i = 0; i < view.getGameFields().length; i++)
+        {
+            view.getGameFields()[i].setEnabled(isStreaming);
+            gameInfo[i] = view.getGameFields()[i].getText();
+        }
+
+
+        if(isStreaming)
+        {
+            view.getStreamButton().setText("Start Stream");
+            model.endStream();
+        }
+        else
+        {
+            view.getStreamButton().setText("End Stream");
+            model.startStream(gameInfo);
+            setGameText(model.getAllGameInfo());
+        }
+    }
+
+    private void setGameText(HashMap<String, String> gameInfo)
+    {
+        StringBuilder builder = new StringBuilder();
+        gameInfo.forEach((key, value) -> builder.append(key).append(" | ").append(value).append("\n"));
+        view.getGameList().setText(builder.toString());
+    }
+
+    private void mouseClicked(MouseEvent me)
+    {
+
     }
 }

@@ -2,6 +2,7 @@ package model;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 public class TwitchViewerDatabase
 {
@@ -169,5 +170,28 @@ public class TwitchViewerDatabase
     public int getCurrentStreamId()
     {
         return currentStreamId;
+    }
+
+    public HashMap<String, String> getAllGameInfo()
+    {
+        HashMap<String, String> gameInfo = new HashMap<>();
+        try {
+            String sql = "SELECT * FROM games;";
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sql);
+
+            while(!result.isClosed())
+            {
+                gameInfo.put(result.getString(2), result.getString(3));
+                result.next();
+            }
+
+
+
+            renewConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return gameInfo;
     }
 }

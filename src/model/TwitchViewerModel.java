@@ -74,6 +74,7 @@ public class TwitchViewerModel
             Gson gson = builder.create();
             TwitchJSON.TwitchInfo twitchInfo = gson.fromJson(reader, TwitchJSON.TwitchInfo.class);
 
+            //noinspection UnusedAssignment
             chatterCount = twitchInfo.chatter_count;
             viewers.addAll(Arrays.asList(twitchInfo.chatters.broadcaster));
             viewers.addAll(Arrays.asList(twitchInfo.chatters.vips));
@@ -129,5 +130,10 @@ public class TwitchViewerModel
     public String[] getCurrentViewers()
     {
         return currentViewers.keySet().toArray(new String[0]);
+    }
+
+    public HashMap<String, String> getAllGameInfo()
+    {
+        return database.getAllGameInfo();
     }
 }

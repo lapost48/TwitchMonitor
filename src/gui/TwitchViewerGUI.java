@@ -1,7 +1,6 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class TwitchViewerGUI extends JFrame
@@ -9,7 +8,7 @@ public class TwitchViewerGUI extends JFrame
     private JTextField[] gameFields;
     private JButton streamButton;
     private JTextArea viewerList;
-    private JTextArea gameList;
+    private JTextPane gameList;
 
     public TwitchViewerGUI(String title)
     {
@@ -131,7 +130,8 @@ public class TwitchViewerGUI extends JFrame
         viewerListPanel.add(viewerListLabel);
 
         viewerList = new JTextArea();
-        viewerList.setBorder(BorderFactory.createBevelBorder(1));
+        viewerList.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(1),
+                                                                BorderFactory.createEmptyBorder(0, 5, 0, 5)));
         viewerList.setDisabledTextColor(Color.BLACK);
         viewerList.setEnabled(false);
 
@@ -158,13 +158,14 @@ public class TwitchViewerGUI extends JFrame
         JLabel gameListLabel = new JLabel("Game List");
         gameListPanel.add(gameListLabel);
 
-        gameList = new JTextArea();
-        gameList.setBorder(BorderFactory.createBevelBorder(1));
+        gameList = new JTextPane();
+        gameList.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(1),
+                                                              BorderFactory.createEmptyBorder(0, 5, 0, 5)));
         gameList.setDisabledTextColor(Color.BLACK);
         gameList.setEnabled(false);
 
         JScrollPane gameListScrollPane = new JScrollPane(gameList);
-        gameListScrollPane.setPreferredSize(new Dimension(150, 200));
+        gameListScrollPane.setPreferredSize(new Dimension(200, 200));
         gameListScrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         gameListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         gameListPanel.add(gameListScrollPane);
@@ -172,7 +173,7 @@ public class TwitchViewerGUI extends JFrame
         this.getContentPane().add(gameListPanel, BorderLayout.EAST);
     }
 
-    public JTextArea getGameList()
+    public JTextPane getGameList()
     {
         return gameList;
     }
