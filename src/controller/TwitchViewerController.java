@@ -1,6 +1,5 @@
 package controller;
 
-import gui.StreamButton;
 import gui.TwitchViewerGUI;
 import model.TwitchViewerModel;
 
@@ -27,7 +26,7 @@ public class TwitchViewerController
     {
         while(true) {
             try {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MINUTES.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -39,7 +38,7 @@ public class TwitchViewerController
     public void exit()
     {
         if(model.isStreaming())
-            streamButtonPress();
+            model.endStream();
     }
 
     private void streamButtonPress()
@@ -47,23 +46,27 @@ public class TwitchViewerController
         boolean isStreaming = model.isStreaming();
         JButton button = view.getStreamButton();
         JTextField[] gameFields = view.getGameFields();
+        String[] gameInfo = new String[2];
 
-        for(JTextField field : gameFields)
-            field.setEnabled(isStreaming);
+        for(int i = 0; i < gameFields.length; i++)
+        {
+            gameFields[i].setEnabled(isStreaming);
+            gameInfo[i] = gameFields[i].getText();
+        }
+
 
         if(isStreaming)
         {
             button.setText("Start Stream");
-            model.setStreaming(false);
+            model.endStream();
         }
         else
         {
             button.setText("End Stream");
-            model.setStreaming(true);
+            model.startStream(gameInfo);
         }
     }
 
-    // TODO: Implement viewer update function
     private void viewerUpdate()
     {
         LinkedList<String> viewerInfo = model.requestViewerInfo();

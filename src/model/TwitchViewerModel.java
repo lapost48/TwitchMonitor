@@ -41,6 +41,22 @@ public class TwitchViewerModel
         return isStreaming;
     }
 
+    public void startStream(String[] gameInfo)
+    {
+        String gameName = gameInfo[0];
+        String gameGenre = gameInfo[1];
+        int gameID = database.addGame(gameInfo);
+        database.startStream(gameID);
+        isStreaming = true;
+    }
+
+    public void endStream()
+    {
+        updateMissingViewers(new LinkedList<>());
+        database.endStream();
+        isStreaming = false;
+    }
+
     public LinkedList<String> requestViewerInfo()
     {
         int chatterCount;
@@ -75,17 +91,17 @@ public class TwitchViewerModel
 
     public void updateNewViewers(LinkedList<String> viewers)
     {
-        LinkedList<String> newViewers = new LinkedList<>();
+        newViewers = new LinkedList<>();
         for(String viewer : viewers)
-            if(!currentViewers.containsKey(viewer))
+            if (!currentViewers.containsKey(viewer))
+            {
+                newViewers.add(viewer);
                 currentViewers.put(viewer, LocalDateTime.now());
+            }
     }
 
     public void updateMissingViewers(LinkedList<String> viewers)
     {
-        if(viewers == null)
-            viewers = new LinkedList<>();
-
         LinkedList<Span> newSpans = new LinkedList<>();
         LinkedList<String> removeKeys = new LinkedList<>();
         for(Map.Entry<String, LocalDateTime> entry : currentViewers.entrySet())

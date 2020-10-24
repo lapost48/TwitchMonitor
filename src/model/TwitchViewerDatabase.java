@@ -72,22 +72,12 @@ public class TwitchViewerDatabase
         conn = DriverManager.getConnection(dbName);
    }
 
-   public void startStream(String gameName)
+   public void startStream(int gameID)
    {
        try {
-            // Check for existing game
-            String sql = "SELECT id FROM games " +
-                    "WHERE name = ?;";
-            PreparedStatement pstmt;
-               pstmt = conn.prepareStatement(sql);
-
-            pstmt.setString(1, gameName);
-            int gameID = pstmt.executeQuery().getInt("id");
-            renewConnection();
-
             // Insert Stream
-            sql = "INSERT INTO streams(start_time,game_id) VALUES(?,?);";
-            pstmt = conn.prepareStatement(sql);
+            String sql = "INSERT INTO streams(start_time,game_id) VALUES(?,?);";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, LocalDateTime.now().toString());
             pstmt.setInt(2, gameID);
             pstmt.executeUpdate();
@@ -101,6 +91,62 @@ public class TwitchViewerDatabase
        } catch (SQLException e) {
            e.printStackTrace();
        }
+   }
+
+   public void endStream()
+   {
+        String endTime = LocalDateTime.now().toString();
+        try {
+            // Update Stream
+            String sql = "UPDATE streams SET end_time = ? "
+                    + "WHERE id = ?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, endTime);
+            stmt.setInt(2, currentStreamId);
+            stmt.executeUpdate();
+            renewConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+   }
+
+   public int addGame(String[] gameInfo)
+   {
+       int gameID = 0;
+        try {
+            // Check for existing game
+            String sql = "SELECT * FROM games " +
+            "WHERE name = ?;";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, gameInfo[0]);
+            ResultSet result = pstmt.executeQuery();
+            renewConnection();
+
+            if(result.isClosed())
+            {
+
+                // Insert Game
+                sql = "INSERT INTO games(name,genre) " +
+                "VALUES(?,?);";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, gameInfo[0]);
+                pstmt.setString(2, gameInfo[1]);
+                pstmt.executeUpdate();
+                renewConnection();
+            }
+
+            // Check for existing game
+            sql = "SELECT id FROM games " +
+                    "WHERE name = ?;";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, gameInfo[0]);
+            gameID = pstmt.executeQuery().getInt(1);
+            renewConnection();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return gameID;
    }
 
    public void addSpan(Span span, int currentStreamId)
