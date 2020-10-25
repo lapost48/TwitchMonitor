@@ -141,7 +141,7 @@ public class TwitchViewerGUI extends JFrame
         viewerListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         viewerListPanel.add(viewerListScrollPane);
 
-        this.getContentPane().add(viewerListPanel, BorderLayout.WEST);
+        this.getContentPane().add(viewerListPanel, BorderLayout.EAST);
     }
 
     public JTextArea getViewerList()
@@ -170,7 +170,7 @@ public class TwitchViewerGUI extends JFrame
         gameListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         gameListPanel.add(gameListScrollPane);
 
-        this.getContentPane().add(gameListPanel, BorderLayout.EAST);
+        this.getContentPane().add(gameListPanel, BorderLayout.WEST);
     }
 
     public JTextPane getGameList()
