@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,15 +18,17 @@ import java.util.Map;
 
 public class TwitchViewerModel
 {
-    private TwitchViewerDatabase database;
+    private Config config;
 
+    private TwitchViewerDatabase database;
     private HashMap<String, LocalDateTime> currentViewers;
     private LinkedList<String> newViewers;
     private boolean isStreaming;
 
     public TwitchViewerModel()
     {
-        database = new TwitchViewerDatabase("jdbc:sqlite:H:/StreamData/Testing/ViewerInfo.db");
+        config = new Config(Paths.get("H:/StreamData/Testing/ViewerInfo.db"), "moonlightleaf");
+        database = new TwitchViewerDatabase(config.getDatabaseString());
 
         currentViewers = new HashMap<>();
         newViewers = new LinkedList<>();
@@ -39,6 +43,16 @@ public class TwitchViewerModel
     public boolean isStreaming()
     {
         return isStreaming;
+    }
+
+    public void updateChannelName(String channelName)
+    {
+        config.setChannelName(channelName);
+    }
+
+    public void updateDbPath(Path dbPath)
+    {
+        config.setDatabaseLocation(dbPath);
     }
 
     public void startStream(String[] gameInfo)
@@ -65,7 +79,7 @@ public class TwitchViewerModel
         URL url;
         try
         {
-            url = new URL("http://tmi.twitch.tv/group/user/moonlightleaf/chatters");
+            url = new URL(config.getViewerURL());
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(url.openStream()));
 

@@ -23,6 +23,8 @@ public class TwitchViewerController
     public void init()
     {
         this.view.getStreamButton().addActionListener(e -> streamButtonPress());
+        this.view.getMenuItems().get("Database Location").addActionListener(e -> dbBrowse());
+        this.view.getMenuItems().get("Channel Name").addActionListener(e -> channelNameDialog());
         setGameText(model.getAllGameInfo());
     }
 
@@ -97,5 +99,24 @@ public class TwitchViewerController
     private void mouseClicked(MouseEvent me)
     {
 
+    }
+
+    private void channelNameDialog()
+    {
+        String channelName = JOptionPane.showInputDialog(
+                this.view,
+                "Enter the channel name.",
+                "Channel Name",
+                JOptionPane.PLAIN_MESSAGE);
+        model.updateChannelName(channelName);
+    }
+
+    private void dbBrowse()
+    {
+        int returnVal = this.view.getFileChooser().showOpenDialog(this.view);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            Path dbPath = Paths.get(this.view.getFileChooser().getSelectedFile().getAbsolutePath());
+            model.updateDbPath(dbPath);
+        }
     }
 }

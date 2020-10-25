@@ -9,13 +9,17 @@ public class TwitchViewerGUI extends JFrame
     private JButton streamButton;
     private JTextArea viewerList;
     private JTextPane gameList;
+    private HashMap<String, JMenuItem> menuItems;
+    private JFileChooser dbChooser;
 
     public TwitchViewerGUI(String title)
     {
         super(title);
+        menuItems = new HashMap<>();
 
         setupContentPane();
 //        setIconImage();
+        createMenu();
 
         streamButton = createStreamButton();
         createCenterPanel(streamButton);
@@ -38,6 +42,38 @@ public class TwitchViewerGUI extends JFrame
     {
 //        ImageIcon img = new ImageIcon(getClass().getResource("C:\\Users\\Nick LaPosta\\IdeaProjects\\TwitchMonitor\\Images\\MoonIcon.png"));
 //        this.setIconImage(img.getImage());
+    }
+
+    private void createMenu()
+    {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu configMenu = new JMenu("Config");
+        JMenuItem channelName = new JMenuItem("Channel Name");
+        configMenu.add(channelName);
+        JMenuItem dbLocation = new JMenuItem(("Database Location"));
+        dbChooser = new JFileChooser();
+        configMenu.add(dbLocation);
+        menuBar.add(configMenu);
+
+        menuItems.put("Channel Name", channelName);
+        menuItems.put("Database Location", dbLocation);
+
+        JMenu scriptMenu = new JMenu("Scripts");
+
+        menuBar.add(scriptMenu);
+
+        this.setJMenuBar(menuBar);
+    }
+
+    public JFileChooser getFileChooser()
+    {
+        return dbChooser;
+    }
+
+    public HashMap<String, JMenuItem> getMenuItems()
+    {
+        return menuItems;
     }
 
     // TODO: Make this function look cleaner. Priority: LOW
