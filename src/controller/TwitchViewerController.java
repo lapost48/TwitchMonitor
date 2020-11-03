@@ -105,6 +105,7 @@ public class TwitchViewerController
     {
         String channelName = view.updateChannelName();
         model.updateChannelName(channelName);
+        viewerUpdate();
     }
 
     private void dbBrowse()
@@ -112,5 +113,6 @@ public class TwitchViewerController
         String dbPath = this.view.browseDbFile();
         if(dbPath != null)
             model.updateDbPath(dbPath);
+        setGameText(model.getAllGameInfo());
     }
 }

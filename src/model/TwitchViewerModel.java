@@ -73,6 +73,7 @@ public class TwitchViewerModel
         } catch(IOException e) {
             e.printStackTrace();
         }
+        database = new TwitchViewerDatabase(config.getDatabaseString());
     }
 
     public void startStream(String[] gameInfo)
