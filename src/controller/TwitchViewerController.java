@@ -103,20 +103,14 @@ public class TwitchViewerController
 
     private void channelNameDialog()
     {
-        String channelName = JOptionPane.showInputDialog(
-                this.view,
-                "Enter the channel name.",
-                "Channel Name",
-                JOptionPane.PLAIN_MESSAGE);
+        String channelName = view.updateChannelName();
         model.updateChannelName(channelName);
     }
 
     private void dbBrowse()
     {
-        int returnVal = this.view.getFileChooser().showOpenDialog(this.view);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            Path dbPath = Paths.get(this.view.getFileChooser().getSelectedFile().getAbsolutePath());
+        String dbPath = this.view.browseDbFile();
+        if(dbPath != null)
             model.updateDbPath(dbPath);
-        }
     }
 }

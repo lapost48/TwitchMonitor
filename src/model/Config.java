@@ -1,26 +1,24 @@
 package model;
 
 
-import java.nio.file.Path;
-
 public class Config
 {
-    private Path databaseLocation;
+    private String databaseLocation;
     private String channelName;
 
-    public Config(Path databaseLocation, String channelName)
+    public Config(String databaseLocation, String channelName)
     {
         this.databaseLocation = databaseLocation;
         this.channelName = channelName;
     }
 
-    public void setDatabaseLocation(Path databaseLocation) {
+    public void setDatabaseLocation(String databaseLocation) {
         this.databaseLocation = databaseLocation;
     }
 
     public String getDatabaseString()
     {
-        return "jdbc:sqlite:" + databaseLocation.toString();
+        return "jdbc:sqlite:" + databaseLocation;
     }
 
     public void setChannelName(String channelName) {

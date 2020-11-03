@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 public class TwitchViewerGUI extends JFrame
 {
@@ -212,5 +213,22 @@ public class TwitchViewerGUI extends JFrame
     public JTextPane getGameList()
     {
         return gameList;
+    }
+
+    public String updateChannelName()
+    {
+        return JOptionPane.showInputDialog(
+                this,
+                "Enter the channel name.",
+                "Channel Name",
+                JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public String browseDbFile()
+    {
+        int returnVal = this.getFileChooser().showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+            return this.getFileChooser().getSelectedFile().getAbsolutePath();
+        return null;
     }
 }

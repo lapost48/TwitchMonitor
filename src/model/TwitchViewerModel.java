@@ -3,9 +3,7 @@ package model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -27,7 +25,17 @@ public class TwitchViewerModel
 
     public TwitchViewerModel()
     {
-        config = new Config(Paths.get("H:/StreamData/Testing/ViewerInfo.db"), "moonlightleaf");
+        config = new Config("H:/StreamData/Testing/ViewerInfo.db", "moonlightleaf");
+        database = new TwitchViewerDatabase(config.getDatabaseString());
+
+        currentViewers = new HashMap<>();
+        newViewers = new LinkedList<>();
+        isStreaming = false;
+    }
+
+    public TwitchViewerModel(Config existingConfig)
+    {
+        config = existingConfig;
         database = new TwitchViewerDatabase(config.getDatabaseString());
 
         currentViewers = new HashMap<>();
@@ -48,11 +56,23 @@ public class TwitchViewerModel
     public void updateChannelName(String channelName)
     {
         config.setChannelName(channelName);
+        File configFile = new File("config.json");
+        try(FileWriter writer = new FileWriter(configFile)) {
+            new GsonBuilder().setPrettyPrinting().create().toJson(config, Config.class, writer);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void updateDbPath(Path dbPath)
+    public void updateDbPath(String dbPath)
     {
         config.setDatabaseLocation(dbPath);
+        File configFile = new File("config.json");
+        try(FileWriter writer = new FileWriter(configFile)) {
+            new GsonBuilder().setPrettyPrinting().create().toJson(config, Config.class, writer);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void startStream(String[] gameInfo)
@@ -149,5 +169,10 @@ public class TwitchViewerModel
     public HashMap<String, String> getAllGameInfo()
     {
         return database.getAllGameInfo();
+    }
+
+    public Config getConfig()
+    {
+        return config;
     }
 }
