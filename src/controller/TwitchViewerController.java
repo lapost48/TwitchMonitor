@@ -3,11 +3,8 @@ package controller;
 import gui.TwitchViewerGUI;
 import model.TwitchViewerModel;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class TwitchViewerController
@@ -25,7 +22,8 @@ public class TwitchViewerController
         this.view.getStreamButton().addActionListener(e -> streamButtonPress());
         this.view.getMenuItems().get("Database Location").addActionListener(e -> dbBrowse());
         this.view.getMenuItems().get("Channel Name").addActionListener(e -> channelNameDialog());
-        setGameText(model.getAllGameInfo());
+        updateGameTable(model.getAllGameInfo());
+        viewerUpdate();
     }
 
     public void run()
@@ -85,20 +83,16 @@ public class TwitchViewerController
         {
             view.getStreamButton().setText("End Stream");
             model.startStream(gameInfo);
-            setGameText(model.getAllGameInfo());
+            updateGameTable(model.getAllGameInfo());
         }
     }
 
-    private void setGameText(HashMap<String, String> gameInfo)
+    private void updateGameTable(HashMap<String, String> gameInfo)
     {
+        
         StringBuilder builder = new StringBuilder();
-        gameInfo.forEach((key, value) -> builder.append(key).append(" | ").append(value).append("\n"));
-        view.getGameList().setText(builder.toString());
-    }
-
-    private void mouseClicked(MouseEvent me)
-    {
-
+        gameInfo.forEach((key, value) -> builder.append(key).append(",").append(value).append("\n"));
+        view.updateGameList(builder.toString());
     }
 
     private void channelNameDialog()
@@ -113,6 +107,6 @@ public class TwitchViewerController
         String dbPath = this.view.browseDbFile();
         if(dbPath != null)
             model.updateDbPath(dbPath);
-        setGameText(model.getAllGameInfo());
+        updateGameTable(model.getAllGameInfo());
     }
 }

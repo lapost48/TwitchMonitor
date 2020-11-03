@@ -186,8 +186,6 @@ public class TwitchViewerDatabase
                 result.next();
             }
 
-
-
             renewConnection();
         } catch (SQLException e) {
             e.printStackTrace();

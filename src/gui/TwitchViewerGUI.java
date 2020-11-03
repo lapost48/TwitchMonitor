@@ -1,15 +1,17 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Vector;
 
 public class TwitchViewerGUI extends JFrame
 {
     private JTextField[] gameFields;
     private JButton streamButton;
     private JTextArea viewerList;
-    private JTextPane gameList;
+    private JTable gameList;
     private HashMap<String, JMenuItem> menuItems;
     private JFileChooser dbChooser;
 
@@ -195,14 +197,16 @@ public class TwitchViewerGUI extends JFrame
         JLabel gameListLabel = new JLabel("Game List");
         gameListPanel.add(gameListLabel);
 
-        gameList = new JTextPane();
-        gameList.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(1),
-                                                              BorderFactory.createEmptyBorder(0, 5, 0, 5)));
-        gameList.setDisabledTextColor(Color.BLACK);
-        gameList.setEnabled(false);
+        JPanel gameTablePanel = new JPanel(new GridLayout(1, 1));
+        gameTablePanel.setBackground(Color.WHITE);
+        gameTablePanel.setBorder(BorderFactory.createBevelBorder(1));
+        gameList = new JTable();
+        gameList.setTableHeader(null);
+        gameList.setShowGrid(false);
+        gameTablePanel.add(gameList);
 
-        JScrollPane gameListScrollPane = new JScrollPane(gameList);
-        gameListScrollPane.setPreferredSize(new Dimension(200, 200));
+        JScrollPane gameListScrollPane = new JScrollPane(gameTablePanel);
+        gameListScrollPane.setPreferredSize(new Dimension(250, 200));
         gameListScrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         gameListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         gameListPanel.add(gameListScrollPane);
@@ -210,7 +214,7 @@ public class TwitchViewerGUI extends JFrame
         this.getContentPane().add(gameListPanel, BorderLayout.WEST);
     }
 
-    public JTextPane getGameList()
+    public JTable getGameList()
     {
         return gameList;
     }
@@ -230,5 +234,18 @@ public class TwitchViewerGUI extends JFrame
         if (returnVal == JFileChooser.APPROVE_OPTION)
             return this.getFileChooser().getSelectedFile().getAbsolutePath();
         return null;
+    }
+
+    public void updateGameList(String gameInfo)
+    {
+        String[] lines = gameInfo.split("\n");
+        DefaultTableModel gameModel = new DefaultTableModel(0, 2);
+        for(int i = 0; i < lines.length; i++)
+        {
+            gameModel.addRow(lines[i].split(","));
+        }
+
+        gameList.setModel(gameModel);
+        repaint();
     }
 }
