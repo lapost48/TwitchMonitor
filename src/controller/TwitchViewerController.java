@@ -22,6 +22,7 @@ public class TwitchViewerController
         this.view.getStreamButton().addActionListener(e -> streamButtonPress());
         this.view.getMenuItems().get("Database Location").addActionListener(e -> dbBrowse());
         this.view.getMenuItems().get("Channel Name").addActionListener(e -> channelNameDialog());
+
         updateGameTable(model.getAllGameInfo());
         viewerUpdate();
     }
@@ -93,6 +94,7 @@ public class TwitchViewerController
         StringBuilder builder = new StringBuilder();
         gameInfo.forEach((key, value) -> builder.append(key).append(",").append(value).append("\n"));
         view.updateGameList(builder.toString());
+        this.view.getGameList().getSelectionModel().addListSelectionListener(l -> selectGameRow());
     }
 
     private void channelNameDialog()
@@ -108,5 +110,18 @@ public class TwitchViewerController
         if(dbPath != null)
             model.updateDbPath(dbPath);
         updateGameTable(model.getAllGameInfo());
+    }
+
+    private void selectGameRow()
+    {
+        int rowNum = this.view.getGameList().getSelectedRow();
+        if(rowNum >= 0)
+        {
+            String gameName = (String) this.view.getGameList().getModel().getValueAt(rowNum, 0);
+            String gameGenre = (String) this.view.getGameList().getModel().getValueAt(rowNum, 1);
+
+            this.view.getGameFields()[0].setText(gameName);
+            this.view.getGameFields()[1].setText(gameGenre);
+        }
     }
 }

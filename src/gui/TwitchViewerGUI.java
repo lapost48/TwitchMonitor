@@ -245,6 +245,7 @@ public class TwitchViewerGUI extends JFrame
             gameModel.addRow(lines[i].split(","));
         }
 
+        gameList.clearSelection();
         gameList.setModel(gameModel);
         repaint();
     }
