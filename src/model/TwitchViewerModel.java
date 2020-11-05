@@ -9,10 +9,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class TwitchViewerModel
 {
@@ -104,10 +101,9 @@ public class TwitchViewerModel
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(url.openStream()));
 
-            GsonBuilder builder = new GsonBuilder();
-
-            Gson gson = builder.create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             TwitchJSON.TwitchInfo twitchInfo = gson.fromJson(reader, TwitchJSON.TwitchInfo.class);
+            reader.close();
 
             //noinspection UnusedAssignment
             chatterCount = twitchInfo.chatter_count;
@@ -117,6 +113,14 @@ public class TwitchViewerModel
             viewers.addAll(Arrays.asList(twitchInfo.chatters.staff));
             viewers.addAll(Arrays.asList(twitchInfo.chatters.admins));
             viewers.addAll(Arrays.asList(twitchInfo.chatters.viewers));
+
+            url = new URL(config.getBotListURL());
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            TwitchJSON.BotInfo botInfo = gson.fromJson(reader, TwitchJSON.BotInfo.class);
+            reader.close();
+
+            LinkedList<String> botNames = new LinkedList<>(Arrays.asList(botInfo.getBotNames()));
+            viewers.removeAll(botNames);
         }
         catch (IOException e)
         {

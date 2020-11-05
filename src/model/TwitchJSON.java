@@ -17,4 +17,17 @@ public class TwitchJSON
         public String[] admins;
         public String[] viewers;
     }
+
+    public class BotInfo
+    {
+        public String[][] bots;
+
+        public String[] getBotNames()
+        {
+            String[] botNames = new String[bots.length];
+            for(int i = 0; i < bots.length; i++)
+                botNames[i] = bots[i][0];
+            return botNames;
+        }
+    }
 }

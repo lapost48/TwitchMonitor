@@ -5,11 +5,13 @@ public class Config
 {
     private String databaseLocation;
     private String channelName;
+    private String botListURL;
 
     public Config(String databaseLocation, String channelName)
     {
         this.databaseLocation = databaseLocation;
         this.channelName = channelName;
+        this.botListURL = "https://api.twitchinsights.net/v1/bots/online";
     }
 
     public void setDatabaseLocation(String databaseLocation) {
@@ -34,5 +36,10 @@ public class Config
     public String getViewerURL()
     {
         return "http://tmi.twitch.tv/group/user/" + channelName + "/chatters";
+    }
+
+    public String getBotListURL()
+    {
+        return botListURL;
     }
 }
